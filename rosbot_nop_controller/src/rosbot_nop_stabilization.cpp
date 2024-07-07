@@ -72,13 +72,13 @@ void RosbotNOPStabilization::run(NetOper& netOp)
 
 int main(int argc, char **argv) 
 {
+  ros::init(argc, argv, "rosbot_nop_stabilization");
 
   NetOper netOp;
   netOp.setLocalTestsParameters();
 
-  ros::init(argc, argv, "rosbot_nop_stabilization");
   ros::NodeHandle nh;
-  RosbotNOPStabilization(nh, netOp);
+  RosbotNOPStabilization rosbotNOPStabilization(nh, netOp);
 
 
   return 0;

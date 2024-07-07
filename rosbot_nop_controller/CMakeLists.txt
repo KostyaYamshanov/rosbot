@@ -11,6 +11,7 @@ find_package(
   roscpp
   nav_core
   std_msgs
+  geometry_msgs
 )
 
 catkin_package(
@@ -43,7 +44,7 @@ add_executable(
 
 add_executable(
   PSO 
-  src/test.cpp
+  # src/test.cpp
   src/PSO.cpp
   src/rosbot_controller.cpp
 )

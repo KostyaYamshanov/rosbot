@@ -81,7 +81,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "rosbot_nop_controller");
     ros::NodeHandle node;
     ros::Subscriber models_sub = node.subscribe("gazebo/model_states", 5, model_state_cb);
-    ros::Publisher control_pub = node.advertise<geometry_msgs::Twist>("cmd_vel", 5);
+    ros::Publisher control_pub = node.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
     Model::State rosbot_main_goal = {2. ,1. ,0.};
     const std::vector<float> q = runPSO(rosbot_main_goal, MAX_TIME, TIME_STEP);
@@ -110,6 +110,7 @@ int main(int argc, char **argv)
             time = 0.;
             i = i + 3;
             rosbot_goal = {q[i], q[i+1], q[i+2]};
+            update_target_yaw();
             rosbot_goal.print();
             nop_controller.setGoal(rosbot_goal);
         }
