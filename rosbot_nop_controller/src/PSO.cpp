@@ -166,14 +166,14 @@ int main(int argc, char **argv)
         // Создание публикации в топик /clicked_point
     ros::Publisher point_pub = nh.advertise<geometry_msgs::PointStamped>("/clicked_point", 10);
     ros::Subscriber models_sub = nh.subscribe("/odom", 1, model_state_cb);
-
+    // TS 5 and q.size = 3 - ok without last point
 	std::cout<<"PSO START"<<std::endl;
-    float time_step = 5; // sec
+    float time_step = 1; // sec
     float dt = 0.01; // sec
     size_t numParticles = 20;
     size_t maxIter = 10;
     Model::State main_goal = {1.,1.,1.};
-    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
+    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
     
     auto pso = pso::PSO(q, numParticles, maxIter, main_goal, time_step, dt);
 
@@ -194,12 +194,12 @@ int main(int argc, char **argv)
         Model::State Goal = {pso.best_global_state[i], pso.best_global_state[i+1], pso.best_global_state[i+2]};
         pso::run_to_goal(currState, Goal, dt, time_step, time_spend);
     }
-    // std::cout<< "RESULT POSITION: " <<std::endl;
-    // ::cout<<currState.x<<" "<<currState.y<<" "<<currState.yaw<<" "<<std::endl;
+    std::cout<< "RESULT POSITION: " <<std::endl;
+    std::cout<<currState.x<<" "<<currState.y<<" "<<currState.yaw<<" "<<std::endl;
 
 
     // rostopic pub /clicked_point geometry_msgs/PointStamped
-    ros::Rate rate(0.5); // Период 2 секунды (0.5 Гц)
+    ros::Rate rate(1.0/time_step); // Период 2 секунды (0.5 Гц)
 
     for(size_t i = 0; i < pso.best_global_state.size(); i = i + 3)
     {
@@ -235,13 +235,13 @@ int main(int argc, char **argv)
 
 
 
-    std::cout<<"q: ";
-    for(auto i : q)
-        std::cout<<i<<" ";
-    std::cout<<std::endl<<"Result: ";
-    for(auto i : pso.best_global_state)
-        std::cout<<i<<" ";
-    std::cout<<std::endl;
+    // std::cout<<"q: ";
+    // for(auto i : q)
+    //     std::cout<<i<<" ";
+    // std::cout<<std::endl<<"Result: ";
+    // for(auto i : pso.best_global_state)
+    //     std::cout<<i<<" ";
+    // std::cout<<std::endl;
 
 	return 0;
 }

@@ -46,7 +46,7 @@ void RosbotNOPStabilization::run(NetOper& netOp)
   while (ros::ok()) {
     ros::spinOnce();
 
-    // update_target_yaw();
+    update_target_yaw();
     nop_controller.setGoal(rosbot_goal);
 
     geometry_msgs::Twist ctrl;
