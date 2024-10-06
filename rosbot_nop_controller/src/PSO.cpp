@@ -168,12 +168,13 @@ int main(int argc, char **argv)
     ros::Subscriber models_sub = nh.subscribe("/odom", 1, model_state_cb);
     // TS 5 and q.size = 3 - ok without last point
 	std::cout<<"PSO START"<<std::endl;
-    float time_step = 1; // sec
+    float time_step = 5; // sec
     float dt = 0.01; // sec
-    size_t numParticles = 20;
+    size_t numParticles = 50;
     size_t maxIter = 10;
-    Model::State main_goal = {1.,1.,1.};
-    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
+    Model::State main_goal = {1.,1.,0.};
+    // std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
+    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
     
     auto pso = pso::PSO(q, numParticles, maxIter, main_goal, time_step, dt);
 
@@ -222,6 +223,7 @@ int main(int argc, char **argv)
         ros::spinOnce();
     }
 
+    rate.sleep();
     ros::spinOnce();
     geometry_msgs::PointStamped point_msg;
     point_msg.header.stamp = ros::Time::now();
@@ -231,7 +233,7 @@ int main(int argc, char **argv)
     point_msg.point.z = rosbot_state.yaw;
     
     point_pub.publish(point_msg);
-    ROS_INFO("Published point: [%f, %f, %f]", point_msg.point.x, point_msg.point.y, point_msg.point.z);
+    ROS_INFO("Published current point: [%f, %f, %f]", point_msg.point.x, point_msg.point.y, point_msg.point.z);
 
 
 

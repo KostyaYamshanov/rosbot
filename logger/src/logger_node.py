@@ -137,7 +137,7 @@ class Logger:
         # s = time_.time()
         self.fill_state(dst_frame=self.robot_frame, state=self.robot_state, src_frame=self.parent_frame)
         self.fill_state(dst_frame=self.kinetic_model_frame, state=self.kinetic_model_state, src_frame=self.parent_frame)
-        self.fill_state(dst_frame=self.nn_model_frame, state=self.nn_model_state, src_frame=self.parent_frame)
+        # self.fill_state(dst_frame=self.nn_model_frame, state=self.nn_model_state, src_frame=self.parent_frame)
         # print("EXECUTION TIME  = {}".format(time_.time() - s))
 
     def fill_state(self, dst_frame, state, src_frame='odom'):

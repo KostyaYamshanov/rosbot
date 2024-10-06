@@ -25,7 +25,7 @@ class RosbotNOPStabilization
 
     const size_t rosbot_model_id = 1;
     const float dt = 0.1;  // [sec]
-    const float eps = 0.1; // [m]
+    const float eps = 0.01; // [m]
 
     void model_state_cb(const gazebo_msgs::ModelStates::ConstPtr &msg);
     void target_sub_cb(const geometry_msgs::PointStamped::ConstPtr &msg);
