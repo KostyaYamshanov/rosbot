@@ -61,7 +61,7 @@ main_goal(main_goal), time_step(time_step), dt(dt)
 
     for(auto& v : velocities)
     {
-        v = (float)rand() / ((float)RAND_MAX + 1);
+        v = (float)rand() / ((float)RAND_MAX + 0.1);
     }
 }
 
@@ -79,12 +79,12 @@ void Particle::evaluate()
 void Particle::update_velocities(std::vector<float> best_global_state)
 {
     float w=1.0;   // constant inertia weight (how much to weigh the previous velocity)
-    float c1=1.0;    // cognative constant
-    float c2=1.0;    // social constant
+    float c1=0.65;    // cognative constant
+    float c2=0.65;    // social constant
     
     for(size_t i = 0; i < N; ++i){
-        float r1 = (float)rand() / ((float)RAND_MAX + 1);
-        float r2 = (float)rand() / ((float)RAND_MAX + 1);
+        float r1 = (float)rand() / ((float)RAND_MAX + 0.1);
+        float r2 = (float)rand() / ((float)RAND_MAX + 0.1);
         float vel_cognitive = c1 * r1 * (best_state[i] - curr_state[i]);
         float vel_social = c2 * r2 * (best_global_state[i] - curr_state[i]);
         velocities[i] = w * velocities[i] + vel_cognitive + vel_social;
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
     size_t numParticles = 20;
     size_t maxIter = 10;
     Model::State main_goal = {1.,1.,1.};
-    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
+    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
     
     auto pso = pso::PSO(q, numParticles, maxIter, main_goal, time_step, dt);
 
