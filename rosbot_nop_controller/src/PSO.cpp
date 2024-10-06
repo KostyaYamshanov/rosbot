@@ -168,8 +168,8 @@ int main(int argc, char **argv)
     ros::Subscriber models_sub = nh.subscribe("/odom", 1, model_state_cb);
     // TS 5 and q.size = 3 - ok without last point
 	std::cout<<"PSO START"<<std::endl;
-    float time_step = 5; // sec
-    float dt = 0.01; // sec
+    float time_step = 2; // sec
+    float dt = 0.1; // sec
     size_t numParticles = 50;
     size_t maxIter = 10;
     Model::State main_goal = {1.,1.,0.};
