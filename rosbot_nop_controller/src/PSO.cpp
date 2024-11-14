@@ -22,18 +22,9 @@ void run_to_goal(Model::State& currState, const Model::State& Goal, const float 
     float time = 0.;                 
     while (time < max_time) 
     {
-        // currState.print();
-        // Goal.print();
-        // std::cout<< "DELTA " << currState.dist(Goal) <<std::endl;
         currState = runner.makeStep();
         time += dt;
-        if (currState.distXY(Goal) < EPS)
-        {
-            // std::cout<< "DELTA BREAK" << currState.dist(Goal) <<std::endl;
-            break;
-        } 
     }
-    // time_spent += time;
 }
 
 // TODO добавить время
@@ -168,10 +159,10 @@ int main(int argc, char **argv)
     ros::Subscriber models_sub = nh.subscribe("/odom", 1, model_state_cb);
     // TS 5 and q.size = 3 - ok without last point
 	std::cout<<"PSO START"<<std::endl;
-    float time_step = 2; // sec
-    float dt = 0.1; // sec
+    float time_step = 3; // sec
+    float dt = 0.01; // sec
     size_t numParticles = 50;
-    size_t maxIter = 10;
+    size_t maxIter = 100;
     Model::State main_goal = {1.,1.,0.};
     // std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
     std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
