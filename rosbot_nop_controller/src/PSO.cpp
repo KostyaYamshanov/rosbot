@@ -37,7 +37,10 @@ float CostFunction(std::vector<float> points,  Model::State MainGoal, const floa
         Model::State Goal = {points[i], points[i+1], points[i+2]};
         run_to_goal(currState, Goal, dt, time_step, time_spent);
     }
-    return std::sqrt(currState.dist(MainGoal) * currState.dist(MainGoal)) + time_spent; 
+    // TODO run_to_goal(currState, main_goal, dt, time_step, time_spent);
+    // попробовать поуменьшать время
+    //  задать Т+ и кол-во точек и если достигали точки раньше то Т+ уменьшали
+    return std::sqrt(currState.dist(MainGoal) * currState.dist(MainGoal)); 
 }
 
 
@@ -163,9 +166,9 @@ int main(int argc, char **argv)
     float dt = 0.01; // sec
     size_t numParticles = 50;
     size_t maxIter = 100;
-    Model::State main_goal = {1.,1.,0.};
-    // std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
-    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (a.k.a initial state vector)
+    Model::State main_goal = {1.,1.,0.}; // TODO extend {8.0, 4.0, 0.}
+    // 
+    std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0.}; // vector to be optimized (initial state vector)
     
     auto pso = pso::PSO(q, numParticles, maxIter, main_goal, time_step, dt);
 
