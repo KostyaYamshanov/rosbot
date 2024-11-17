@@ -13,10 +13,9 @@ RosbotNOPStabilization::RosbotNOPStabilization(ros::NodeHandle& nh, NetOper& net
 
 void RosbotNOPStabilization::target_sub_cb(const geometry_msgs::PointStamped::ConstPtr &msg) 
 {
-
   rosbot_goal.x = msg->point.x;
   rosbot_goal.y = msg->point.y;
-  rosbot_goal.yaw = atan2(rosbot_goal.y - rosbot_state.y, rosbot_goal.x - rosbot_state.x);
+  // rosbot_goal.yaw = atan2(rosbot_goal.y - rosbot_state.y, rosbot_goal.x - rosbot_state.x);
   ROS_INFO("Target: %lf %lf %lf\n", rosbot_goal.x, rosbot_goal.y, rosbot_goal.yaw);
 }
 
@@ -50,7 +49,7 @@ void RosbotNOPStabilization::run(NetOper& netOp)
     nop_controller.setGoal(rosbot_goal);
 
     geometry_msgs::Twist ctrl;
-    if (rosbot_state.distXY(rosbot_goal) > eps) 
+    if (fabs(rosbot_state.distXY(rosbot_goal)) > eps) 
     {
       const Model::Control& u = nop_controller.calcControl(rosbot_state);
       ctrl.linear.x = u.left;

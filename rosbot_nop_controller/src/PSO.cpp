@@ -37,6 +37,7 @@ float CostFunction(std::vector<float> points,  Model::State MainGoal, const floa
         Model::State Goal = {points[i], points[i+1], points[i+2]};
         run_to_goal(currState, Goal, dt, time_step, time_spent);
     }
+    run_to_goal(currState, MainGoal, dt, time_step, time_spent);
     // TODO run_to_goal(currState, main_goal, dt, time_step, time_spent);
     // попробовать поуменьшать время
     //  задать Т+ и кол-во точек и если достигали точки раньше то Т+ уменьшали
