@@ -15,7 +15,6 @@ void RosbotNOPStabilization::target_sub_cb(const geometry_msgs::PointStamped::Co
 {
   rosbot_goal.x = msg->point.x;
   rosbot_goal.y = msg->point.y;
-  // rosbot_goal.yaw = atan2(rosbot_goal.y - rosbot_state.y, rosbot_goal.x - rosbot_state.x);
   ROS_INFO("Target: %lf %lf %lf\n", rosbot_goal.x, rosbot_goal.y, rosbot_goal.yaw);
 }
 
