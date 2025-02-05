@@ -34,11 +34,13 @@ public:
     float dt = 0.;
     Model::State main_goal;
     Particle() = default;
-    Particle(const std::vector<float>& initial_state, Model::State main_goal, const float time_step, const float dt);
+    Particle(const std::vector<float>& initial_state, Model::State main_goal, const float time_step, const float dt, const float t_max);
 
     void update_state();
     void update_velocities(std::vector<float> best_global_state);
     void evaluate();
+
+    float CostFunction();
 
 };
 
@@ -46,16 +48,17 @@ public:
 class PSO
 {
 public:
-    std::vector<float> best_global_state;
-    std::vector<Particle> swarm;
-    size_t maxIter;
-    float best_global_error = std::numeric_limits<float>::max();
-    float dt = 0.;
-    float Tmax = 0.;
-    float time_step = 0.;
-    Model::State main_goal;
+    std::vector<float> best_global_state_;
+    Particle best_particle_;
+    std::vector<Particle> swarm_;
+    size_t maxIter_;
+    float best_global_error_ = std::numeric_limits<float>::max();
+    float dt_ = 0.;
+    float Tmax_ = 0.;
+    float time_step_ = 0.;
+    Model::State main_goal_;
     
-    PSO(std::vector<float> initial_state, size_t numParticles, size_t maxIter, Model::State main_goal, float time_step, float dt);
+    PSO(std::vector<float> initial_state, size_t numParticles, size_t maxIter, Model::State main_goal, float time_step, float dt, float t_max);
     std::vector<float> fit();
 
 };
