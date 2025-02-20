@@ -365,8 +365,8 @@ float Particle::CostFunction() {
     float time_spent = 0.0f;                    // Суммарное затраченное время
     float segment_time_limit = time_step;       // Локальная переменная для адаптации лимитов
     // const float time_penalty_factor = 0.5f;     // Коэффициент штрафа за опоздание
-    const float distance_weight = 2.0f;         // Вес ошибки позиционирования
-    const float time_weight = 0.5f;             // Вес временной ошибки
+    const float distance_weight = 10.0f;         // Вес ошибки позиционирования
+    const float time_weight = 0.25f;             // Вес временной ошибки
 
     // Обработка промежуточных точек
     for (size_t i = 0; i < curr_state.size(); i += 3) {
@@ -383,17 +383,19 @@ float Particle::CostFunction() {
     }
 
     // Финализация движения к основной цели
-    // if (available_time > 0) {
-    //     run_to_goal(initial_state, main_goal, dt, available_time, segment_time_limit, time_spent);
-    // }
+    if (available_time > 0) {
+        run_to_goal(initial_state, main_goal, dt, available_time, segment_time_limit, time_spent);
+    }
 
 
     if (initial_state.dist(main_goal) < EPS) {
     // Если достигли цели быстрее - уменьшаем лимит для следующих отрезков
     //     time_step = std::max(time_spent * 0.8f, dt * 2.0f);
         time_step = float(time_spent /  float(float(curr_state.size())/3.0));
+        Tmax = time_spent;
         std::cout<<"time_spent: "<<time_spent<<std::endl;
         std::cout<<"time_step: "<<time_step<<std::endl;
+        std::cout<<"new Tmax: "<<Tmax<<std::endl;
     } // else {
     //     // Если не уложились - увеличиваем лимит для следующих отрезков
     //     time_step_limit *= 1.2f;
@@ -491,11 +493,11 @@ int main(int argc, char **argv) {
     ros::Publisher point_pub = nh.advertise<geometry_msgs::PointStamped>("/clicked_point", 10);
     ros::Subscriber models_sub = nh.subscribe("/odom", 1, model_state_cb);
 
-    float time_step = 2; 
+    float time_step = 5; 
     float dt = 0.01;
     size_t numParticles = 50;
     size_t maxIter = 100;
-    float t_max = 10;
+    float t_max = 15;
     Model::State main_goal = {1.,1.,0.};
     size_t N = size_t(t_max / time_step) * 3;
     // std::vector<float> q = {0.,0.,0., 0.,0.,0., 0.,0.,0.};
@@ -507,7 +509,7 @@ int main(int argc, char **argv) {
     float time_spent = 0.0f;
     for(size_t i = 0; i < pso.best_global_state_.size(); i += 3) {
         Model::State Goal = {pso.best_global_state_[i], pso.best_global_state_[i+1], pso.best_global_state_[i+2]};
-        float available_time = t_max - time_spent;
+        float available_time = pso.best_particle_.Tmax - time_spent;
         float current_dt = pso.best_particle_.dt;
         float optimal_time_step = pso.best_particle_.time_step;
         pso::run_to_goal(currState, Goal, current_dt, available_time, time_step, time_spent);
@@ -546,6 +548,6 @@ int main(int argc, char **argv) {
     point_msg.point.z = main_goal.yaw;
     point_pub.publish(point_msg);
     ROS_INFO("Published current point: [%f, %f, %f]", point_msg.point.x, point_msg.point.y, point_msg.point.z);
-    
+    std::cout<<"Tmax: "<<pso.best_particle_.Tmax<<std::endl;
     return 0;
 }
