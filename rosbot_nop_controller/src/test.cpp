@@ -27,6 +27,7 @@ std::vector<float> runPSO(Model::State main_goal, float max_time, float time_ste
 
     Model::State currState{0., 0., 0.};
     float time_spent;
+    float obs_cost;
     for(size_t i = 0; i < pso_result.best_global_state.size(); i = i + 3)
     {
         Model::State Goal = {pso_result.best_global_state[i], pso_result.best_global_state[i+1], pso_result.best_global_state[i+2]};
